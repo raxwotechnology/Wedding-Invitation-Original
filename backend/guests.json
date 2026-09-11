@@ -1,0 +1,56 @@
+[
+  {
+    "_id": "1",
+    "name": "Kavindu Perera",
+    "title": "Mr",
+    "phone": "0771234567",
+    "group": "Family",
+    "side": "A",
+    "status": "Confirmed",
+    "table": "jxdcaf9eh",
+    "rsvpUpdatedAt": "2026-09-07T18:20:29.628Z"
+  },
+  {
+    "_id": "2",
+    "name": "Dewmi Fernando",
+    "title": "Miss",
+    "phone": "0712345678",
+    "group": "Friends",
+    "side": "B",
+    "status": "Pending",
+    "table": "tt7u5giee",
+    "rsvpUpdatedAt": null
+  },
+  {
+    "_id": "3",
+    "name": "Saman Kumara",
+    "title": "Mr",
+    "phone": "0701112222",
+    "group": "Colleagues",
+    "side": "A",
+    "status": "Declined",
+    "table": "tt7u5giee",
+    "rsvpUpdatedAt": "2026-09-07T18:03:15.924Z"
+  },
+  {
+    "_id": "4",
+    "name": "naduni",
+    "title": "Ms.",
+    "phone": "0714520147",
+    "group": "Family",
+    "side": "",
+    "status": "Declined",
+    "table": "tt7u5giee",
+    "rsvpUpdatedAt": "2026-09-07T18:29:49.346Z"
+  },
+  {
+    "_id": "5",
+    "name": "Nishu",
+    "title": "",
+    "phone": "0714250241",
+    "group": "Family",
+    "side": "",
+    "status": "Pending",
+    "table": ""
+  }
+]
