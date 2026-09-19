@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ArrowLeft, Clock, Sparkles, Utensils, Camera, Heart, Music, GlassWater } from "lucide-react";
+import { ArrowLeft, Clock, Sparkles, Utensils, Camera, Heart, Music, GlassWater, ZoomIn, Calendar } from "lucide-react";
 
 /* ─── Gold divider ───────────────────────────────────────────────────── */
 function GoldDivider() {
@@ -28,29 +28,57 @@ function CreamBg() {
   );
 }
 
+/* ─── Agenda data ───────────────────────────────────────────────────── */
 const DEFAULT_AGENDA = [
-  { time: "10:00 AM", title: "Guest Arrival & Welcome", desc: "Welcome drinks & greetings at Tranquil Banquet Hall", icon: GlassWater },
-  { time: "10:30 AM", title: "Poruwa Ceremony", desc: "Traditional auspicious customs & exchange of rings", icon: Sparkles },
-  { time: "12:00 PM", title: "Cake Cutting & Champagne Toast", desc: "Celebratory toast with family & friends", icon: Heart },
-  { time: "12:30 PM", title: "Grand Wedding Banquet", desc: "Exquisite lunch buffet, refreshments & speeches", icon: Utensils },
-  { time: "02:00 PM", title: "Music & Photo Session", desc: "Live music, dancing & creating everlasting memories", icon: Music },
-  { time: "03:30 PM", title: "Going Away & Farewell", desc: "Sending off the newlyweds with blessings and love", icon: Clock },
+  { time: "09:30 AM", title: "Groom & Bride Welcome Dancing", desc: "Traditional welcome dancing performance as bride & groom arrive", icon: Music },
+  { time: "10:00 AM", title: "Hall Entrance", desc: "Grand entrance of the couple into Wasala Banquets & Nature Resort", icon: Sparkles },
+  { time: "10:15 AM", title: "Oil Lamp Ceremony", desc: "Lighting of the traditional oil lamp for auspicious blessings", icon: Sparkles },
+  { time: "10:20 AM - 10:30 AM", title: "Kirikala & Cake Cutting", desc: "Traditional milk rice (Kirikala) and ceremonial cake cutting", icon: Heart },
+  { time: "10:40 AM", title: "Welcome Dance", desc: "Celebratory welcome dance performance by artists", icon: Music },
+  { time: "10:50 AM", title: "Family Photos", desc: "Photography session with parents and immediate family", icon: Camera },
+  { time: "11:00 AM", title: "Bar Open - Couple Toast", desc: "Bar open celebration & congratulatory toast with guests", icon: GlassWater },
+  { time: "11:15 AM - 12:15 PM", title: "Group Photos", desc: "Photography session with relatives, friends & all guests", icon: Camera },
+  { time: "12:15 PM", title: "Surprise Dance by Bride", desc: "Special surprise dance performance by the beautiful bride", icon: Music },
+  { time: "12:30 PM", title: "Buffet Open", desc: "Exquisite wedding grand lunch buffet and refreshments", icon: Utensils },
+  { time: "12:45 PM - 01:45 PM", title: "Going Away Dress Change", desc: "Bride & groom preparation for the going away celebration", icon: Clock },
+  { time: "02:00 PM - 02:30 PM", title: "Going Away Photoshoot", desc: "Romantic photoshoot session for the newlyweds", icon: Camera },
+  { time: "02:45 PM", title: "Going Away Welcome", desc: "Welcoming the newlyweds in their going away attire", icon: Sparkles },
+  { time: "03:00 PM", title: "Dhol Event & DJ Dance Floor", desc: "Live energetic Dhol performance & DJ dance party", icon: Music },
+  { time: "04:00 PM", title: "Farewell & Conclusion", desc: "Sending off the newlyweds with blessings, love & memories", icon: Heart },
 ];
 
-const DEFAULT_GALLERY = [
-  { url: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80", caption: "Love in the air" },
-  { url: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=600&q=80", caption: "Eternal bond" },
-  { url: "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=600&q=80", caption: "Special moments" },
-  { url: "https://images.unsplash.com/photo-1583939411023-14783179e581?auto=format&fit=crop&w=600&q=80", caption: "Together forever" },
-];
-
-import { getApiUrl } from "@/lib/api";
+/* ─── All 58 real wedding photos ─────────────────────────────────────── */
+const GALLERY = Array.from({ length: 58 }, (_, i) => ({
+  url: `/wedding-photos/photo-${String(i + 1).padStart(2, "0")}.jpg`,
+  caption: `Wedding Moment ${i + 1}`,
+}));
 
 export default function AgendaGallery() {
   const [revealed, setRevealed] = useState(false);
   const [activeTab, setActiveTab] = useState<"agenda" | "gallery">("agenda");
   const [agendaList, setAgendaList] = useState(DEFAULT_AGENDA);
-  const [galleryList, setGalleryList] = useState<any[]>(DEFAULT_GALLERY);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+
+  /* Keyboard navigation for lightbox */
+  const handleKey = useCallback(
+    (e: KeyboardEvent) => {
+      if (lightbox === null) return;
+      if (e.key === "ArrowRight") setLightbox((p) => (p! + 1) % GALLERY.length);
+      if (e.key === "ArrowLeft")  setLightbox((p) => (p! - 1 + GALLERY.length) % GALLERY.length);
+      if (e.key === "Escape")      setLightbox(null);
+    },
+    [lightbox]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [handleKey]);
+
+  /* Lock body scroll when lightbox is open */
+  useEffect(() => {
+    document.body.style.overflow = lightbox !== null ? "hidden" : "";
+  }, [lightbox]);
 
   useEffect(() => {
     try {
@@ -60,25 +88,17 @@ export default function AgendaGallery() {
         if (Array.isArray(parsed) && parsed.length > 0) {
           setAgendaList(parsed.map((item: any) => ({
             ...item,
-            icon: item.title?.toLowerCase().includes("lunch") || item.title?.toLowerCase().includes("food") ? Utensils
-              : item.title?.toLowerCase().includes("music") || item.title?.toLowerCase().includes("dance") ? Music
-              : item.title?.toLowerCase().includes("cake") ? Heart
-              : item.title?.toLowerCase().includes("poruwa") ? Sparkles
+            icon: item.title?.toLowerCase().includes("lunch") || item.title?.toLowerCase().includes("buffet") || item.title?.toLowerCase().includes("food") ? Utensils
+              : item.title?.toLowerCase().includes("music") || item.title?.toLowerCase().includes("dance") || item.title?.toLowerCase().includes("dj") || item.title?.toLowerCase().includes("dhol") ? Music
+              : item.title?.toLowerCase().includes("photo") || item.title?.toLowerCase().includes("shoot") ? Camera
+              : item.title?.toLowerCase().includes("bar") || item.title?.toLowerCase().includes("drink") || item.title?.toLowerCase().includes("toast") ? GlassWater
+              : item.title?.toLowerCase().includes("cake") || item.title?.toLowerCase().includes("farewell") || item.title?.toLowerCase().includes("end") ? Heart
+              : item.title?.toLowerCase().includes("lamp") || item.title?.toLowerCase().includes("entrance") || item.title?.toLowerCase().includes("welcome") ? Sparkles
               : Clock
           })));
         }
       }
     } catch (_) {}
-
-    // Fetch dynamic gallery
-    fetch(getApiUrl("/api/gallery"))
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          setGalleryList(data);
-        }
-      })
-      .catch(console.error);
 
     const t = setTimeout(() => setRevealed(true), 100);
     return () => clearTimeout(t);
@@ -152,7 +172,7 @@ export default function AgendaGallery() {
           >
             <button
               onClick={() => setActiveTab("agenda")}
-              className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+              className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                 activeTab === "agenda"
                   ? "text-white shadow-md"
                   : "text-gray-500 hover:text-gray-800"
@@ -161,11 +181,11 @@ export default function AgendaGallery() {
                 background: activeTab === "agenda" ? "linear-gradient(135deg, #9A7540, #C9A060)" : "transparent",
               }}
             >
-              🗓️ Event Timeline
+              <Calendar size={13} /> Event Timeline
             </button>
             <button
               onClick={() => setActiveTab("gallery")}
-              className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+              className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                 activeTab === "gallery"
                   ? "text-white shadow-md"
                   : "text-gray-500 hover:text-gray-800"
@@ -174,7 +194,7 @@ export default function AgendaGallery() {
                 background: activeTab === "gallery" ? "linear-gradient(135deg, #9A7540, #C9A060)" : "transparent",
               }}
             >
-              📸 Photo Gallery
+              <Camera size={13} /> Photo Gallery
             </button>
           </div>
         </div>
@@ -252,28 +272,31 @@ export default function AgendaGallery() {
         {/* TAB 2: PHOTO GALLERY */}
         {activeTab === "gallery" && (
           <div className="space-y-4">
+            <p className="text-center text-[12px] text-gray-400 mb-4">
+              Click any photo to view full screen
+            </p>
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              {galleryList.map((photo, i) => (
+              {GALLERY.map((photo, i) => (
                 <div
-                  key={photo.id || i}
-                  className="relative rounded-2xl overflow-hidden shadow-md group border border-white/60"
+                  key={i}
+                  onClick={() => setLightbox(i)}
+                  className="relative rounded-2xl overflow-hidden shadow-md group border border-white/60 cursor-pointer"
                   style={{
                     animationName: "zoomIn",
                     animationDuration: "0.5s",
-                    animationDelay: `${i * 90}ms`,
+                    animationDelay: `${Math.min(i, 12) * 60}ms`,
                     animationFillMode: "both",
                   }}
                 >
                   <img
                     src={photo.url}
-                    alt={photo.caption || "Wedding photo"}
+                    alt={photo.caption}
                     className="w-full h-44 sm:h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
                   />
-                  {photo.caption && (
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
-                      <p className="text-white text-xs font-semibold">{photo.caption}</p>
-                    </div>
-                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <ZoomIn className="text-white opacity-80" size={24} />
+                  </div>
                 </div>
               ))}
             </div>
@@ -297,23 +320,64 @@ export default function AgendaGallery() {
         {/* Bottom CTA navigation */}
         <div className="mt-10 flex flex-col gap-3">
           <Link
-            href="/find-my-seat"
+            href="/details"
             className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full text-white text-[12px] font-bold tracking-widest uppercase shadow-md transition-all"
             style={{
               background: "linear-gradient(135deg, #9A7540, #C9A060)",
             }}
           >
-            📍 Find My Table Seat
-          </Link>
-
-          <Link
-            href="/details"
-            className="flex items-center justify-center gap-1.5 py-2 text-center text-xs font-semibold text-gray-500 hover:text-gray-800"
-          >
             &larr; Back to Wedding Details
           </Link>
         </div>
       </div>
+
+      {/* ── Lightbox Overlay ── */}
+      {lightbox !== null && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center"
+          style={{ background: "rgba(0,0,0,0.93)" }}
+          onClick={() => setLightbox(null)}
+        >
+          <img
+            src={GALLERY[lightbox].url}
+            alt={GALLERY[lightbox].caption}
+            className="max-h-[88vh] max-w-[92vw] object-contain rounded-lg shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {/* Close */}
+          <button
+            onClick={() => setLightbox(null)}
+            className="absolute top-4 right-5 text-white text-3xl font-light hover:text-gray-300 transition-colors"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+
+          {/* Prev */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setLightbox((lightbox - 1 + GALLERY.length) % GALLERY.length); }}
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full text-white text-2xl font-bold flex items-center justify-center hover:bg-white/20 transition-colors"
+            aria-label="Previous photo"
+          >
+            ‹
+          </button>
+
+          {/* Next */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setLightbox((lightbox + 1) % GALLERY.length); }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full text-white text-2xl font-bold flex items-center justify-center hover:bg-white/20 transition-colors"
+            aria-label="Next photo"
+          >
+            ›
+          </button>
+
+          {/* Caption */}
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white text-xs tracking-wider opacity-60">
+            {GALLERY[lightbox].caption}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { MapPin } from "lucide-react";
 
 /* ─── Wedding details (defaults match the uploaded invitation) ─────── */
 const DEFAULT_PROFILE = {
@@ -10,8 +11,9 @@ const DEFAULT_PROFILE = {
   partnerTwo:    "Rashin",
   date:          "2026-09-21",
   dayOfWeek:     "MONDAY",
-  venue:         "TRANQUIL HOTEL &\nBANQUET HALL",
-  venueCity:     "WELIWERIYA",
+  venue:         "WASALA BANQUETS &\nNATURE RESORT",
+  venueCity:     "",
+  mapLink:       "https://maps.app.goo.gl/HSCyyh3cX1pdinyb8?g_st=ic",
   timeFrom:      "10.00 A.M.",
   groomParents:  "MR. SUSANTHA & MRS. ANOMA",
   brideParents:  "MR. WIKUM & MRS. INOKA",
@@ -453,12 +455,28 @@ function LandingPageContent() {
           }}>
             {profile.venue}
           </p>
-          <p style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.15em", color: "#3A3A3A", marginTop: 5 }}>
-            {profile.venueCity}
-          </p>
+          {profile.venueCity && (
+            <p style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.15em", color: "#3A3A3A", marginTop: 4 }}>
+              {profile.venueCity}
+            </p>
+          )}
           <p style={{ fontSize: "10.5px", fontWeight: 500, letterSpacing: "0.14em", color: "#4A4A4A", marginTop: 5 }}>
             FROM {profile.timeFrom} TO ONWARDS
           </p>
+
+          <a
+            href={profile.mapLink || "https://maps.app.goo.gl/HSCyyh3cX1pdinyb8?g_st=ic"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1.5 rounded-full text-[10.5px] font-bold tracking-wider uppercase transition-all hover:scale-105 shadow-sm"
+            style={{
+              background: "rgba(255,255,255,0.8)",
+              border: "1px solid rgba(201,160,96,0.35)",
+              color: "#9A7540",
+            }}
+          >
+            <MapPin size={12} /> View Location on Map &rarr;
+          </a>
         </div>
 
         {/* Thin separator */}
@@ -492,28 +510,28 @@ function LandingPageContent() {
               letterSpacing: "0.18em",
             }}
           >
-            Open Full Invitation ✉️
+            Open Full Invitation
           </Link>
 
           <Link
-            href={`/find-my-seat${guestName ? `?q=${encodeURIComponent(guestName)}` : ''}`}
-            className="block w-full py-3.5 rounded-full text-center text-[11px] font-bold tracking-[0.18em] uppercase mb-2"
+            href="/gallery"
+            className="block w-full py-3.5 rounded-full text-center text-[11px] font-bold tracking-[0.18em] uppercase mb-2 shadow-sm"
             style={{
-              background: "rgba(255,255,255,0.75)",
+              background: "rgba(255,255,255,0.9)",
               backdropFilter: "blur(8px)",
-              border: "1.5px solid rgba(201,160,96,0.35)",
+              border: "1.5px solid rgba(201,160,96,0.5)",
               color: "#9A7540",
-              boxShadow: "0 4px 16px -4px rgba(201,160,96,0.18)",
+              boxShadow: "0 4px 16px -4px rgba(201,160,96,0.22)",
             }}
           >
-            📍 Find My Seat
+            Photo Gallery
           </Link>
 
           <Link
             href="/agenda-gallery"
             className="block w-full py-2.5 text-center text-[11px] font-semibold text-gray-500 hover:text-gray-800 underline underline-offset-4"
           >
-            🗓️ View Program Agenda &amp; Gallery &rarr;
+            View Program Agenda &rarr;
           </Link>
         </div>
 

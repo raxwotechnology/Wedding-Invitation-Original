@@ -352,9 +352,9 @@ export default function FindYourSeat() {
           <div className="flex flex-col items-center py-14 gap-4" style={{ animationName:"fadeIn", animationDuration:"0.3s", animationFillMode:"both" }}>
             <div className="relative">
               <div className="w-16 h-16 rounded-full" style={{ background:"linear-gradient(135deg, #9A7540, #E8C87A)", animationName:"spinSlow", animationDuration:"1.2s", animationTimingFunction:"linear", animationIterationCount:"infinite", opacity:0.2 }} />
-              <div className="absolute inset-0 flex items-center justify-center text-3xl"
+              <div className="absolute inset-0 flex items-center justify-center"
                 style={{ animationName:"heartbeat", animationDuration:"1s", animationTimingFunction:"ease-in-out", animationIterationCount:"infinite" }}>
-                💍
+                <Sparkles size={28} className="text-[#C9A060]" />
               </div>
             </div>
             <p className="text-sm font-medium" style={{ color:"#9A8A6A" }}>Searching guest list…</p>
@@ -380,7 +380,9 @@ export default function FindYourSeat() {
         {state.kind === "none" && (
           <div className="text-center py-10 rounded-3xl"
             style={{ background:"rgba(255,255,255,0.82)", backdropFilter:"blur(16px)", border:"1px solid rgba(201,160,96,0.12)", boxShadow:"0 4px 24px -8px rgba(201,160,96,0.10)", animationName:"zoomIn", animationDuration:"0.4s", animationFillMode:"both" }}>
-            <div className="text-5xl mb-4" style={{ animationName:"float", animationDuration:"3s", animationTimingFunction:"ease-in-out", animationIterationCount:"infinite" }}>🤔</div>
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center bg-[#F9F4ED] border border-[#E8C87A]/30">
+              <Search size={28} className="text-[#C9A060]" />
+            </div>
             <p className="font-bold text-lg mb-2" style={{ color:"#1A1A1A" }}>Name not found</p>
             <p className="text-sm leading-relaxed px-6" style={{ color:"#7A7A6A" }}>
               We couldn&apos;t find &ldquo;<span className="font-semibold" style={{ color:"#3A3A3A" }}>{query.trim()}</span>&rdquo;.

@@ -11,12 +11,21 @@ interface AgendaItem {
 }
 
 const DEFAULT_AGENDA: AgendaItem[] = [
-  { id: "1", time: "10:00 AM", title: "Guest Arrival & Welcome", desc: "Welcome drinks & greetings at Tranquil Banquet Hall" },
-  { id: "2", time: "10:30 AM", title: "Poruwa Ceremony", desc: "Traditional auspicious customs & exchange of rings" },
-  { id: "3", time: "12:00 PM", title: "Cake Cutting & Champagne Toast", desc: "Celebratory toast with family & friends" },
-  { id: "4", time: "12:30 PM", title: "Grand Wedding Banquet", desc: "Exquisite lunch buffet, refreshments & speeches" },
-  { id: "5", time: "02:00 PM", title: "Music & Photo Session", desc: "Live music, dancing & creating everlasting memories" },
-  { id: "6", time: "03:30 PM", title: "Going Away & Farewell", desc: "Sending off the newlyweds with blessings and love" },
+  { id: "1", time: "09:30 AM", title: "Groom & Bride Welcome Dancing", desc: "Traditional welcome dancing performance as bride & groom arrive" },
+  { id: "2", time: "10:00 AM", title: "Hall Entrance", desc: "Grand entrance of the couple into Wasala Banquets & Nature Resort" },
+  { id: "3", time: "10:15 AM", title: "Oil Lamp Ceremony", desc: "Lighting of the traditional oil lamp for auspicious blessings" },
+  { id: "4", time: "10:20 AM - 10:30 AM", title: "Kirikala & Cake Cutting", desc: "Traditional milk rice (Kirikala) and ceremonial cake cutting" },
+  { id: "5", time: "10:40 AM", title: "Welcome Dance", desc: "Celebratory welcome dance performance by artists" },
+  { id: "6", time: "10:50 AM", title: "Family Photos", desc: "Photography session with parents and immediate family" },
+  { id: "7", time: "11:00 AM", title: "Bar Open - Couple Toast", desc: "Bar open celebration & congratulatory toast with guests" },
+  { id: "8", time: "11:15 AM - 12:15 PM", title: "Group Photos", desc: "Photography session with relatives, friends & all guests" },
+  { id: "9", time: "12:15 PM", title: "Surprise Dance by Bride", desc: "Special surprise dance performance by the beautiful bride" },
+  { id: "10", time: "12:30 PM", title: "Buffet Open", desc: "Exquisite wedding grand lunch buffet and refreshments" },
+  { id: "11", time: "12:45 PM - 01:45 PM", title: "Going Away Dress Change", desc: "Bride & groom preparation for the going away celebration" },
+  { id: "12", time: "02:00 PM - 02:30 PM", title: "Going Away Photoshoot", desc: "Romantic photoshoot session for the newlyweds" },
+  { id: "13", time: "02:45 PM", title: "Going Away Welcome", desc: "Welcoming the newlyweds in their going away attire" },
+  { id: "14", time: "03:00 PM", title: "Dhol Event & DJ Dance Floor", desc: "Live energetic Dhol performance & DJ dance party" },
+  { id: "15", time: "04:00 PM", title: "Farewell & Conclusion", desc: "Sending off the newlyweds with blessings, love & memories" },
 ];
 
 export default function AdminAgendaPage() {

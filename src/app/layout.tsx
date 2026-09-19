@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
+import BackgroundMusic from "@/components/BackgroundMusic";
 
 export const metadata: Metadata = {
-  title: "Vishmi & Sanjana Wedding",
+  title: "Rashin & Rashmi Wedding",
   description: "Join us as we celebrate love, joy, and unforgettable moments together",
 };
 
@@ -33,6 +34,7 @@ export default function RootLayout({
         <ThemeProvider>
           {children}
         </ThemeProvider>
+        <BackgroundMusic />
       </body>
     </html>
   );

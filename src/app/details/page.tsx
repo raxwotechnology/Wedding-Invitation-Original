@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Calendar, MapPin, ArrowLeft, Phone } from "lucide-react";
+import { Calendar, MapPin, ArrowLeft, Phone, Camera } from "lucide-react";
 import FlipCountdown from "@/components/FlipCountdown";
+import MediaGallery from "@/components/MediaGallery";
 import { useEffect, useState, useMemo } from "react";
 
 /* ─── Gold divider ───────────────────────────────────────────────────── */
@@ -31,7 +32,7 @@ function CreamBg() {
 }
 
 /* ─── Animated info tile ─────────────────────────────────────────────── */
-function InfoTile({ icon, label, value, delay = 0 }: { icon: React.ReactNode; label: string; value: string; delay?: number }) {
+function InfoTile({ icon, label, value, link, linkText, delay = 0 }: { icon: React.ReactNode; label: string; value: string; link?: string; linkText?: string; delay?: number }) {
   const [vis, setVis] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVis(true), delay); return () => clearTimeout(t); }, [delay]);
 
@@ -55,9 +56,19 @@ function InfoTile({ icon, label, value, delay = 0 }: { icon: React.ReactNode; la
       >
         {icon}
       </div>
-      <div className="text-left min-w-0">
+      <div className="text-left min-w-0 flex-1">
         <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", color: "#9A8A6A", textTransform: "uppercase", marginBottom: 2 }}>{label}</p>
         <p style={{ fontSize: 14, fontWeight: 600, color: "#1A1A1A" }}>{value}</p>
+        {link && (
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[11px] font-bold text-[#9A7540] hover:underline mt-1"
+          >
+            {linkText || "Open in Google Maps"} &rarr;
+          </a>
+        )}
       </div>
     </div>
   );
@@ -71,8 +82,9 @@ export default function DetailsPage() {
     partnerOne:   "Rashmi",
     partnerTwo:   "Rashin",
     date:         "2026-09-21",
-    venue:        "Tranquil Hotel & Banquet Hall",
-    venueCity:    "Weliweriya",
+    venue:        "Wasala Banquets & Nature Resort",
+    venueCity:    "",
+    mapUrl:       "https://maps.app.goo.gl/HSCyyh3cX1pdinyb8?g_st=ic",
     detailsHeroUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80",
     rsvpPhone1:   "0772063903",
     rsvpName1:    "Rashin",
@@ -124,23 +136,23 @@ export default function DetailsPage() {
     >
       <CreamBg />
 
-      {/* Back button */}
-      <button
-        onClick={() => router.back()}
-        className="fixed top-5 left-4 flex items-center gap-1.5 text-sm font-semibold z-30 cursor-pointer"
+      {/* Back to Wedding Invitation button */}
+      <Link
+        href="/"
+        className="fixed top-5 left-4 flex items-center gap-1.5 text-sm font-semibold z-30 cursor-pointer shadow-md transition-all hover:scale-105"
         style={{
           color:         "#9A7540",
-          background:    "rgba(255,255,255,0.85)",
+          background:    "rgba(255,255,255,0.92)",
           backdropFilter:"blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
-          border:        "1px solid rgba(201,160,96,0.2)",
+          border:        "1px solid rgba(201,160,96,0.3)",
           borderRadius:  "999px",
-          padding:       "8px 16px",
-          boxShadow:     "0 4px 16px -4px rgba(201,160,96,0.2)",
+          padding:       "8px 18px",
+          boxShadow:     "0 4px 16px -4px rgba(201,160,96,0.25)",
         }}
       >
-        <ArrowLeft size={16} strokeWidth={2.5} /> Back
-      </button>
+        <ArrowLeft size={16} strokeWidth={2.5} /> Invitation
+      </Link>
 
       {/* Hero photo with decorative ring */}
       <div
@@ -233,6 +245,8 @@ export default function DetailsPage() {
             icon={<MapPin size={18} style={{ color: "#C9A060" }} />}
             label="Venue"
             value={`${profile.venue}${profile.venueCity ? ", " + profile.venueCity : ""}`}
+            link={profile.mapUrl || "https://maps.app.goo.gl/HSCyyh3cX1pdinyb8?g_st=ic"}
+            linkText="Open in Google Maps"
             delay={560}
           />
           <InfoTile
@@ -278,22 +292,20 @@ export default function DetailsPage() {
                 boxShadow: "0 8px 32px -8px rgba(201,160,96,0.55)",
               }}
             >
-              RSVP Now 💌
+              RSVP Now
             </Link>
           )}
 
           <Link
-            href="/find-my-seat"
-            className="flex items-center justify-center gap-2 w-full py-4 rounded-full text-[12px] font-bold tracking-[0.18em] uppercase"
+            href="/gallery"
+            className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full text-[12px] font-bold tracking-[0.18em] uppercase shadow-sm"
             style={{
-              background: "rgba(255,255,255,0.8)",
-              backdropFilter: "blur(10px)",
-              border:  "1.5px solid rgba(201,160,96,0.28)",
-              color:   "#9A7540",
-              boxShadow: "0 4px 16px -4px rgba(201,160,96,0.14)",
+              background: "linear-gradient(135deg, #9A7540, #C9A060)",
+              color: "#FFFFFF",
+              boxShadow: "0 4px 16px -4px rgba(201,160,96,0.4)",
             }}
           >
-            <MapPin size={14} /> Find My Seat
+            <Camera size={15} /> Photo Gallery
           </Link>
 
           <Link
@@ -305,9 +317,14 @@ export default function DetailsPage() {
               color: "#9A7540",
             }}
           >
-            🗓️ View Program Agenda &amp; Gallery
+            View Program Agenda
           </Link>
         </div>
+      </div>
+
+      {/* Embedded Media Gallery on Details Page */}
+      <div className="w-full max-w-5xl mt-12 relative z-10 px-4">
+        <MediaGallery />
       </div>
     </main>
   );
