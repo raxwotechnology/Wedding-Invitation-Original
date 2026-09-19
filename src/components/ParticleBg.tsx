@@ -11,6 +11,9 @@ type Particle = {
   size: number;
   type: "heart" | "petal" | "sparkle" | "ring" | "dot";
   drift: number;
+  opacity: number;
+};
+
 const TYPES: Particle["type"][] = ["heart", "petal", "sparkle", "ring", "dot", "heart", "petal", "dot"];
 
 export default function ParticleBg({ count = 50 }: { count?: number }) {
