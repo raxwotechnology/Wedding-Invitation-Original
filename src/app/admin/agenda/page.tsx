@@ -19,7 +19,7 @@ const DEFAULT_AGENDA: AgendaItem[] = [
   { id: "6", time: "10:50 AM", title: "Family Photos", desc: "Photography session with parents and immediate family" },
   { id: "7", time: "11:00 AM", title: "Bar Open - Couple Toast", desc: "Bar open celebration & congratulatory toast with guests" },
   { id: "8", time: "11:15 AM - 12:15 PM", title: "Group Photos", desc: "Photography session with relatives, friends & all guests" },
-  { id: "9", time: "12:15 PM", title: "Surprise Dance by Bride", desc: "Special surprise dance performance by the beautiful bride" },
+  { id: "9", time: "12:15 PM", title: "Dancing Event", desc: "Special dancing performance session" },
   { id: "10", time: "12:30 PM", title: "Buffet Open", desc: "Exquisite wedding grand lunch buffet and refreshments" },
   { id: "11", time: "12:45 PM - 01:45 PM", title: "Going Away Dress Change", desc: "Bride & groom preparation for the going away celebration" },
   { id: "12", time: "02:00 PM - 02:30 PM", title: "Going Away Photoshoot", desc: "Romantic photoshoot session for the newlyweds" },
