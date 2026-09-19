@@ -6,6 +6,11 @@ import BackgroundMusic from "@/components/BackgroundMusic";
 export const metadata: Metadata = {
   title: "Rashin & Rashmi Wedding",
   description: "Join us as we celebrate love, joy, and unforgettable moments together",
+  icons: {
+    icon: "/wedding-photos/photo-51.jpg",
+    apple: "/wedding-photos/photo-51.jpg",
+    shortcut: "/wedding-photos/photo-51.jpg",
+  },
 };
 
 export const viewport: Viewport = {
@@ -23,6 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/wedding-photos/photo-51.jpg" type="image/jpeg" />
+        <link rel="apple-touch-icon" href="/wedding-photos/photo-51.jpg" />
+        <link rel="shortcut icon" href="/wedding-photos/photo-51.jpg" type="image/jpeg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

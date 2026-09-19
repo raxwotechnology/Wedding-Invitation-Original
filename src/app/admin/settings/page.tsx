@@ -28,19 +28,19 @@ export default function Settings() {
       } catch (e) {}
     }
     return {
-      partnerOne: "Vishmi",
-      partnerTwo: "Sanjana",
-      date: "2026-12-18",
-      venue: "The Kingsbury, Colombo",
-      email: "vishmi.sanjana@wedding.com",
+      partnerOne: "Rashmi",
+      partnerTwo: "Rashin",
+      date: "2026-09-21",
+      venue: "Wasala Banquets & Nature Resort",
+      email: "rashin.rashmi@wedding.com",
       bgUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=80",
       bgBlur: 4,
       bgOpacity: 100,
-      coverUrl: "https://images.unsplash.com/photo-1583939000003-8d02cc271708?auto=format&fit=crop&w=800&q=80",
+      coverUrl: "/wedding-photos/photo-32.jpg",
       detailsBgUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=80",
       detailsBgBlur: 5,
       detailsBgOpacity: 100,
-      detailsHeroUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80",
+      detailsHeroUrl: "/wedding-photos/photo-32.jpg",
       cardBgUrl: "",
       cardBgBlur: 0,
       cardBgOpacity: 40

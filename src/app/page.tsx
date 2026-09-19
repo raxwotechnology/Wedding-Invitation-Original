@@ -1,9 +1,244 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { MapPin } from "lucide-react";
+
+/* ─── Wedding Splash / Entrance Animation ───────────────────────────── */
+function WeddingSplash({ onDone }: { onDone: () => void }) {
+  const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
+  const doneRef = useRef(false);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase("hold"), 400);
+    const t2 = setTimeout(() => setPhase("exit"), 2800);
+    const t3 = setTimeout(() => {
+      if (!doneRef.current) { doneRef.current = true; onDone(); }
+    }, 3500);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [onDone]);
+
+  const dismiss = () => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    setPhase("exit");
+    setTimeout(onDone, 650);
+  };
+
+  const isExiting = phase === "exit";
+
+  /* Floating petal seeds */
+  const petals = [
+    { left: "8%",  delay: 0,    dur: 3.2, size: 13, rot: 25 },
+    { left: "18%", delay: 0.4,  dur: 2.8, size: 10, rot: -15 },
+    { left: "30%", delay: 0.15, dur: 3.5, size: 15, rot: 40 },
+    { left: "45%", delay: 0.7,  dur: 3.0, size: 11, rot: -30 },
+    { left: "58%", delay: 0.3,  dur: 2.6, size: 14, rot: 20 },
+    { left: "70%", delay: 0.55, dur: 3.3, size: 10, rot: -45 },
+    { left: "80%", delay: 0.1,  dur: 2.9, size: 13, rot: 35 },
+    { left: "90%", delay: 0.8,  dur: 3.1, size: 9,  rot: -20 },
+    { left: "25%", delay: 1.0,  dur: 2.7, size: 12, rot: 50 },
+    { left: "62%", delay: 1.2,  dur: 3.4, size: 11, rot: -10 },
+  ];
+
+  return (
+    <div
+      onClick={dismiss}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(160deg, #FAF6EF 0%, #F5EDE0 40%, #F9F3E8 70%, #F6EFE2 100%)",
+        overflow: "hidden",
+        cursor: "pointer",
+        /* curtain swipe upward on exit */
+        transform: isExiting ? "translateY(-100%)" : "translateY(0)",
+        transition: isExiting ? "transform 0.7s cubic-bezier(0.4,0,0.2,1)" : "none",
+      }}
+    >
+      {/* ── Floating petals ── */}
+      {petals.map((p, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            top: "-30px",
+            left: p.left,
+            width: p.size,
+            height: p.size * 1.5,
+            background: `rgba(255,${200 + (i % 3) * 18},${180 + (i % 4) * 12},0.82)`,
+            borderRadius: "50% 40% 50% 30%",
+            opacity: 0,
+            animation: `splashPetalFall ${p.dur}s ease-in ${p.delay}s 1 forwards`,
+            transform: `rotate(${p.rot}deg)`,
+            boxShadow: "0 2px 6px rgba(201,100,80,0.18)",
+          }}
+        />
+      ))}
+
+      {/* ── Gold sparkle dots (static) ── */}
+      {[[12,20],[88,15],[6,70],[93,65],[50,8],[20,88],[78,85]].map(([l,t],i) => (
+        <div key={i} style={{
+          position: "absolute",
+          left: `${l}%`, top: `${t}%`,
+          width: 3 + (i % 3),
+          height: 3 + (i % 3),
+          borderRadius: "50%",
+          background: "#D4AF37",
+          opacity: 0.35 + (i % 4) * 0.08,
+          boxShadow: "0 0 6px 2px rgba(212,175,55,0.30)",
+          animation: `splashSparkle ${1.5 + (i % 3) * 0.4}s ease-in-out ${i * 0.2}s infinite alternate`,
+        }} />
+      ))}
+
+      {/* ── Floral accent top-left (tiny) ── */}
+      <svg width="160" height="160" viewBox="0 0 220 220" fill="none"
+        style={{ position: "absolute", top: 0, left: 0, opacity: 0.85 }}>
+        <ellipse cx="72" cy="55" rx="34" ry="42" fill="rgba(255,255,255,0.92)" />
+        <ellipse cx="48" cy="72" rx="28" ry="36" fill="rgba(255,253,248,0.88)" transform="rotate(-25 48 72)" />
+        <ellipse cx="96" cy="68" rx="28" ry="36" fill="rgba(255,253,248,0.88)" transform="rotate(20 96 68)" />
+        <ellipse cx="70" cy="82" rx="14" ry="18" fill="rgba(255,248,232,0.96)" />
+        <circle cx="70" cy="78" r="8" fill="rgba(255,238,200,0.90)" />
+        <circle cx="70" cy="78" r="4" fill="rgba(255,225,170,0.82)" />
+        <path d="M20 110 C5 90, 0 75, 8 62 C10 80, 20 98, 32 108Z" fill="rgba(95,135,75,0.60)" />
+        <path d="M100 18 C118 8, 125 24, 138 14 C126 28, 112 33, 100 22Z" fill="rgba(95,135,75,0.55)" />
+        <path d="M95 55 C120 38, 150 22, 175 8" stroke="#C9A060" strokeWidth="1.1" fill="none" opacity="0.55" />
+      </svg>
+
+      {/* ── Floral accent bottom-right (tiny, mirrored) ── */}
+      <svg width="160" height="160" viewBox="0 0 220 220" fill="none"
+        style={{ position: "absolute", bottom: 0, right: 0, opacity: 0.85, transform: "rotate(180deg) scaleX(-1)" }}>
+        <ellipse cx="72" cy="55" rx="34" ry="42" fill="rgba(255,255,255,0.92)" />
+        <ellipse cx="48" cy="72" rx="28" ry="36" fill="rgba(255,253,248,0.88)" transform="rotate(-25 48 72)" />
+        <ellipse cx="96" cy="68" rx="28" ry="36" fill="rgba(255,253,248,0.88)" transform="rotate(20 96 68)" />
+        <ellipse cx="70" cy="82" rx="14" ry="18" fill="rgba(255,248,232,0.96)" />
+        <circle cx="70" cy="78" r="8" fill="rgba(255,238,200,0.90)" />
+        <circle cx="70" cy="78" r="4" fill="rgba(255,225,170,0.82)" />
+        <path d="M20 110 C5 90, 0 75, 8 62 C10 80, 20 98, 32 108Z" fill="rgba(95,135,75,0.60)" />
+        <path d="M100 18 C118 8, 125 24, 138 14 C126 28, 112 33, 100 22Z" fill="rgba(95,135,75,0.55)" />
+        <path d="M95 55 C120 38, 150 22, 175 8" stroke="#C9A060" strokeWidth="1.1" fill="none" opacity="0.55" />
+      </svg>
+
+      {/* ── Gold left & right side lines ── */}
+      <div style={{
+        position: "absolute", left: 14, top: "15%", bottom: "15%", width: 1.5,
+        background: "linear-gradient(to bottom, transparent, #D4AF37 20%, #E8C87A 50%, #D4AF37 80%, transparent)",
+        opacity: 0.5,
+      }} />
+      <div style={{
+        position: "absolute", right: 14, top: "15%", bottom: "15%", width: 1.5,
+        background: "linear-gradient(to bottom, transparent, #D4AF37 20%, #E8C87A 50%, #D4AF37 80%, transparent)",
+        opacity: 0.5,
+      }} />
+
+      {/* ── Center content ── */}
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        padding: "0 32px",
+        opacity: phase === "enter" ? 0 : 1,
+        transform: phase === "enter" ? "translateY(24px) scale(0.96)" : "translateY(0) scale(1)",
+        transition: "opacity 0.8s ease 0.2s, transform 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s",
+      }}>
+        {/* R & R monogram ring */}
+        <div style={{ position: "relative", width: 96, height: 96, marginBottom: 18 }}>
+          <svg width="96" height="96" viewBox="0 0 90 90" fill="none" style={{ position: "absolute", inset: 0 }}>
+            <circle cx="45" cy="45" r="42" stroke="#C9A060" strokeWidth="1.5" fill="none" />
+            <circle cx="45" cy="45" r="36" stroke="#C9A060" strokeWidth="0.6" fill="none" strokeDasharray="2.5 4" />
+            <path d="M27 74 C24 65, 30 60, 35 66 C32 73, 27 76, 27 74Z" fill="#7D9E5A" opacity="0.7" />
+            <path d="M63 74 C66 65, 60 60, 55 66 C58 73, 63 76, 63 74Z" fill="#7D9E5A" opacity="0.7" />
+            <path d="M35 78 Q45 72 55 78" stroke="#C9A060" strokeWidth="1" fill="none" opacity="0.8" />
+          </svg>
+          <div style={{
+            position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+            fontFamily: "'Great Vibes', cursive", fontSize: "2rem", color: "#C9A060",
+            marginTop: "-4px",
+            animation: "splashSparkle 2.5s ease-in-out infinite alternate",
+          }}>
+            R&amp;R
+          </div>
+        </div>
+
+        {/* Couple names — gold shimmer */}
+        <h1 style={{
+          fontFamily: "'Great Vibes', cursive",
+          fontSize: "clamp(2.8rem, 12vw, 4rem)",
+          lineHeight: 1.2,
+          background: "linear-gradient(90deg, #9A7540 0%, #C9A060 20%, #E8C87A 40%, #D4AF37 55%, #E8C87A 70%, #C9A060 85%, #9A7540 100%)",
+          backgroundSize: "200% auto",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          animationName: "shimmer",
+          animationDuration: "3s",
+          animationTimingFunction: "linear",
+          animationIterationCount: "infinite",
+          filter: "drop-shadow(0 3px 12px rgba(201,160,96,0.30))",
+          marginBottom: 10,
+        }}>
+          Rashmi &amp; Rashin
+        </h1>
+
+        {/* Gold lace divider */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", maxWidth: 260, margin: "6px 0 14px" }}>
+          <div style={{ flex: 1, height: 1, background: "linear-gradient(to right, transparent, #C9A060)" }} />
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3" fill="#C9A060" opacity="0.7" />
+            <circle cx="10" cy="10" r="6" stroke="#C9A060" strokeWidth="0.7" fill="none" opacity="0.5" />
+            <circle cx="4"  cy="4"  r="1.5" fill="#D4AF37" opacity="0.55" />
+            <circle cx="16" cy="4"  r="1.5" fill="#D4AF37" opacity="0.55" />
+            <circle cx="4"  cy="16" r="1.5" fill="#D4AF37" opacity="0.55" />
+            <circle cx="16" cy="16" r="1.5" fill="#D4AF37" opacity="0.55" />
+          </svg>
+          <div style={{ flex: 1, height: 1, background: "linear-gradient(to left, transparent, #C9A060)" }} />
+        </div>
+
+        {/* Date & venue */}
+        <p style={{
+          fontSize: "10px", fontWeight: 700, letterSpacing: "0.22em",
+          color: "#3A3A3A", marginBottom: 4,
+        }}>
+          MONDAY · 21ST SEPTEMBER 2026
+        </p>
+        <p style={{
+          fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em",
+          color: "#1A1A1A", lineHeight: 1.5,
+        }}>
+          WASALA BANQUETS &amp; NATURE RESORT
+        </p>
+
+        {/* Tap hint */}
+        <p style={{
+          fontSize: "9.5px", letterSpacing: "0.18em", color: "#9A7540",
+          marginTop: 28, opacity: 0.7, animation: "splashSparkle 1.8s ease-in-out 1.5s infinite alternate",
+        }}>
+          TAP TO ENTER
+        </p>
+      </div>
+
+      {/* Keyframes injected inline */}
+      <style>{`
+        @keyframes splashPetalFall {
+          0%   { opacity: 0;   transform: translateY(0) rotate(var(--r, 20deg)) scale(1); }
+          10%  { opacity: 0.9; }
+          90%  { opacity: 0.7; }
+          100% { opacity: 0;   transform: translateY(110vh) rotate(calc(var(--r, 20deg) + 180deg)) scale(0.8); }
+        }
+        @keyframes splashSparkle {
+          from { opacity: 0.35; transform: scale(0.95); }
+          to   { opacity: 0.85; transform: scale(1.08); }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 /* ─── Wedding details (defaults match the uploaded invitation) ─────── */
 const DEFAULT_PROFILE = {
@@ -272,6 +507,7 @@ function FloralCornerBottomRight({ visible }: { visible: boolean }) {
 function LandingPageContent() {
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
   const [visible, setVisible] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
   const searchParams = useSearchParams();
   const guestName = searchParams?.get("to") || searchParams?.get("guest") || null;
 
@@ -312,12 +548,14 @@ function LandingPageContent() {
   })();
 
   return (
-    <main
-      className="min-h-screen flex flex-col items-center relative overflow-hidden"
-      style={{ background: "linear-gradient(160deg, #F9F4ED 0%, #F5EFE5 40%, #F8F3EB 70%, #F6F0E7 100%)" }}
-    >
-      {/* Watercolor texture */}
-      <WatercolorBg />
+    <>
+      {showSplash && <WeddingSplash onDone={() => setShowSplash(false)} />}
+      <main
+        className="min-h-screen flex flex-col items-center relative overflow-hidden"
+        style={{ background: "linear-gradient(160deg, #F9F4ED 0%, #F5EFE5 40%, #F8F3EB 70%, #F6F0E7 100%)" }}
+      >
+        {/* Watercolor texture */}
+        <WatercolorBg />
 
       {/* Gold side accents */}
       <GoldSideAccent side="left" />
@@ -329,7 +567,7 @@ function LandingPageContent() {
 
       {/* ── Main invitation content ── */}
       <div
-        className="relative z-10 w-full max-w-[400px] flex flex-col items-center text-center px-10 pt-16 pb-10"
+        className="relative z-10 w-full max-w-[400px] flex flex-col items-center text-center px-10 pt-16 pb-24"
         style={{ minHeight: "100vh" }}
       >
         {/* Monogram */}
@@ -529,14 +767,23 @@ function LandingPageContent() {
 
           <Link
             href="/agenda-gallery"
-            className="block w-full py-2.5 text-center text-[11px] font-semibold text-gray-500 hover:text-gray-800 underline underline-offset-4"
+            className="block w-full py-3.5 rounded-full text-center text-[11px] font-bold tracking-[0.18em] uppercase mb-4 shadow-sm transition-all hover:scale-[1.02] active:scale-95"
+            style={{
+              background: "rgba(255,255,255,0.75)",
+              backdropFilter: "blur(8px)",
+              border: "1.5px solid rgba(201,160,96,0.38)",
+              color: "#9A7540",
+              boxShadow: "0 4px 16px -4px rgba(201,160,96,0.16)",
+            }}
           >
-            View Program Agenda &rarr;
+            View Program Agenda
           </Link>
         </div>
 
       </div>
-    </main>
+
+      </main>
+    </>
   );
 }
 

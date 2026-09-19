@@ -66,22 +66,38 @@ function CreamBg() {
 /* ─── Individual animated photo card ──────────────────────────────────── */
 function PhotoCard({ photo, index, onClick }: { photo: { url: string }; index: number; onClick: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [visible, setVisible] = useState(index < 8);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    if (imgRef.current && (imgRef.current.complete || imgRef.current.naturalWidth > 0)) {
+      setLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (visible) return;
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.01, rootMargin: "250px 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
+  }, [visible]);
+
+  /* Fallback timer so photos are never stuck blank on mobile browsers */
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoaded(true);
+    }, 1200);
+    return () => clearTimeout(timer);
   }, []);
 
-  /* Stagger delay capped at 500ms so deep items don't wait too long */
-  const delay = Math.min(index % 8, 7) * 70;
+  /* Stagger delay capped at 400ms so deep items don't wait too long */
+  const delay = Math.min(index % 8, 7) * 60;
 
   return (
     <div
@@ -89,23 +105,25 @@ function PhotoCard({ photo, index, onClick }: { photo: { url: string }; index: n
       className="photo-card relative cursor-pointer overflow-hidden rounded-2xl border border-white/60 bg-white/30 shadow-md"
       style={{
         opacity: visible ? 1 : 0,
-        animation: visible ? `photoReveal 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}ms both` : "none",
+        animation: visible ? `photoReveal 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}ms both` : "none",
         aspectRatio: index % 5 === 2 ? "3/4" : index % 7 === 4 ? "4/3" : "1/1",
       }}
       onClick={onClick}
     >
       {/* Skeleton shimmer while loading */}
       {!loaded && (
-        <div className="absolute inset-0 skeleton-shimmer rounded-2xl" />
+        <div className="absolute inset-0 skeleton-shimmer rounded-2xl pointer-events-none" />
       )}
 
       <img
+        ref={imgRef}
         src={photo.url}
         alt="Wedding Moment"
         className="w-full h-full object-cover transition-transform duration-700"
-        style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease" }}
-        loading="lazy"
+        style={{ opacity: loaded ? 1 : 0.9, transition: "opacity 0.4s ease" }}
+        loading={index < 6 ? "eager" : "lazy"}
         onLoad={() => setLoaded(true)}
+        onError={() => setLoaded(true)}
       />
 
       {/* Gradient overlay on hover */}

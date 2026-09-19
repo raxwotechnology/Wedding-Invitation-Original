@@ -19,10 +19,18 @@ function AnimatedPhotoCard({
   onClick: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [visible, setVisible] = useState(index < 6);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    if (imgRef.current && (imgRef.current.complete || imgRef.current.naturalWidth > 0)) {
+      setLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (visible) return;
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
@@ -32,13 +40,21 @@ function AnimatedPhotoCard({
           observer.disconnect();
         }
       },
-      { threshold: 0.08, rootMargin: "0px 0px -30px 0px" }
+      { threshold: 0.01, rootMargin: "250px 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
+  }, [visible]);
+
+  /* Fallback timer */
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoaded(true);
+    }, 1200);
+    return () => clearTimeout(timer);
   }, []);
 
-  const delay = Math.min(index % 6, 5) * 80;
+  const delay = Math.min(index % 6, 5) * 60;
 
   return (
     <div
@@ -54,15 +70,17 @@ function AnimatedPhotoCard({
       onClick={onClick}
     >
       {/* Skeleton loader */}
-      {!loaded && <div className="absolute inset-0 skeleton-shimmer" />}
+      {!loaded && <div className="absolute inset-0 skeleton-shimmer pointer-events-none" />}
 
       <img
+        ref={imgRef}
         src={url}
         alt="Wedding photo"
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.45s ease" }}
-        loading="lazy"
+        style={{ opacity: loaded ? 1 : 0.9, transition: "opacity 0.45s ease" }}
+        loading={index < 6 ? "eager" : "lazy"}
         onLoad={() => setLoaded(true)}
+        onError={() => setLoaded(true)}
       />
 
       {/* Hover overlay */}

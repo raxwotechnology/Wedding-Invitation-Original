@@ -85,7 +85,7 @@ export default function DetailsPage() {
     venue:        "Wasala Banquets & Nature Resort",
     venueCity:    "",
     mapUrl:       "https://maps.app.goo.gl/HSCyyh3cX1pdinyb8?g_st=ic",
-    detailsHeroUrl: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80",
+    detailsHeroUrl: "/wedding-photos/photo-32.jpg",
     rsvpPhone1:   "0772063903",
     rsvpName1:    "Rashin",
     rsvpPhone2:   "0753363903",
@@ -163,7 +163,7 @@ export default function DetailsPage() {
           transition: "opacity 0.9s ease 0.2s, transform 0.9s cubic-bezier(0.16,1,0.3,1) 0.2s",
         }}
       >
-        <div className="relative" style={{ width: 120, height: 120 }}>
+        <div className="relative" style={{ width: 130, height: 130 }}>
           {/* Spinning gold gradient ring */}
           <div
             className="absolute rounded-full"
@@ -177,15 +177,14 @@ export default function DetailsPage() {
               borderRadius: "50%",
             }}
           />
-          {/* White gap ring */}
-          <div className="absolute bg-white rounded-full" style={{ inset: -2 }} />
-          {/* Photo */}
-          <img
-            src={profile.detailsHeroUrl}
-            alt="Couple"
-            className="absolute rounded-full object-cover"
-            style={{ inset: 3 }}
-          />
+          {/* Circular Photo Container */}
+          <div className="absolute inset-0 bg-white rounded-full p-1 shadow-md overflow-hidden flex items-center justify-center">
+            <img
+              src={profile.detailsHeroUrl}
+              alt="Rashmi & Rashin"
+              className="w-full h-full rounded-full object-cover"
+            />
+          </div>
         </div>
 
         {/* Pulsing glow under ring */}
@@ -278,43 +277,31 @@ export default function DetailsPage() {
 
         {/* Action buttons */}
         <div className="flex flex-col gap-3" style={s(830)}>
-          {!isEventPast && (
-            <Link
-              href="/rsvp"
-              className="block text-center w-full py-4 rounded-full text-white text-[12px] font-bold tracking-[0.2em] uppercase"
-              style={{
-                background: "linear-gradient(90deg, #9A7540 0%, #C9A060 25%, #E8C87A 50%, #C9A060 75%, #9A7540 100%)",
-                backgroundSize: "200% auto",
-                animationName: "shimmer",
-                animationDuration: "3.5s",
-                animationTimingFunction: "linear",
-                animationIterationCount: "infinite",
-                boxShadow: "0 8px 32px -8px rgba(201,160,96,0.55)",
-              }}
-            >
-              RSVP Now
-            </Link>
-          )}
-
           <Link
             href="/gallery"
-            className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full text-[12px] font-bold tracking-[0.18em] uppercase shadow-sm"
+            className="flex items-center justify-center gap-2 w-full py-4 rounded-full text-white text-[12px] font-bold tracking-[0.2em] uppercase shadow-md transition-all hover:scale-[1.02] active:scale-95"
             style={{
-              background: "linear-gradient(135deg, #9A7540, #C9A060)",
-              color: "#FFFFFF",
-              boxShadow: "0 4px 16px -4px rgba(201,160,96,0.4)",
+              background: "linear-gradient(90deg, #9A7540 0%, #C9A060 25%, #E8C87A 50%, #C9A060 75%, #9A7540 100%)",
+              backgroundSize: "200% auto",
+              animationName: "shimmer",
+              animationDuration: "3.5s",
+              animationTimingFunction: "linear",
+              animationIterationCount: "infinite",
+              boxShadow: "0 8px 32px -8px rgba(201,160,96,0.55)",
             }}
           >
-            <Camera size={15} /> Photo Gallery
+            <Camera size={16} /> Photo Gallery
           </Link>
 
           <Link
             href="/agenda-gallery"
-            className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full text-[12px] font-bold tracking-[0.18em] uppercase"
+            className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full text-[12px] font-bold tracking-[0.18em] uppercase transition-all hover:scale-[1.02] active:scale-95"
             style={{
-              background: "rgba(201,160,96,0.08)",
-              border: "1.5px dashed rgba(201,160,96,0.35)",
+              background: "rgba(255,255,255,0.8)",
+              backdropFilter: "blur(10px)",
+              border: "1.5px solid rgba(201,160,96,0.35)",
               color: "#9A7540",
+              boxShadow: "0 4px 16px -4px rgba(201,160,96,0.15)",
             }}
           >
             View Program Agenda
