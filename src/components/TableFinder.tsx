@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 
+import { Search } from "lucide-react";
+
 export default function TableFinder() {
   const [search, setSearch] = useState("");
 
@@ -17,11 +19,11 @@ export default function TableFinder() {
           <input 
             type="text" 
             placeholder="Search" 
-            className="w-full bg-pink-50/50 px-4 py-3 rounded-2xl border border-pink-100 text-sm focus:outline-none focus:border-pink-300"
+            className="w-full bg-pink-50/50 pl-10 pr-4 py-3 rounded-2xl border border-pink-100 text-sm focus:outline-none focus:border-pink-300"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <span className="absolute left-4 top-3 text-gray-400">🔍</span>
+          <span className="absolute left-3.5 top-3.5 text-gray-400"><Search size={16} /></span>
         </div>
       </div>
 

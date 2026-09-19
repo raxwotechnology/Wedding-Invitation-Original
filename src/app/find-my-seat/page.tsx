@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search, MapPin, ArrowLeft, Loader2, AlertCircle,
-  Users, RefreshCw, CheckCircle2, XCircle, Sparkles, Check
+  Users, RefreshCw, CheckCircle2, XCircle, Sparkles, Check, Heart
 } from "lucide-react";
 import { getApiUrl } from "@/lib/api";
 
@@ -241,7 +241,7 @@ export default function FindYourSeat() {
     });
 
     setIsUpdatingRsvp(false);
-    setRsvpToast(newStatus === "Confirmed" ? "🎉 You're attending! Response recorded." : "RSVP recorded. We'll miss you!");
+    setRsvpToast(newStatus === "Confirmed" ? "You're attending! Response recorded." : "RSVP recorded. We'll miss you!");
     setTimeout(() => setRsvpToast(null), 4000);
   };
 
@@ -545,9 +545,9 @@ export default function FindYourSeat() {
                 </>
               ) : (
                 <div className="py-4">
-                  <p className="text-5xl mb-4" style={{ animationName:"heartbeat", animationDuration:"1.5s", animationTimingFunction:"ease-in-out", animationIterationCount:"infinite" }}>
-                    💛
-                  </p>
+                  <div className="flex justify-center mb-4">
+                    <Heart size={40} className="text-amber-500 fill-amber-400 animate-soft-pulse" />
+                  </div>
                   <p className="font-bold text-xl mb-3" style={{ color:"#1A1A1A" }}>{state.result.displayName}</p>
                   <p className="text-sm leading-relaxed" style={{ color:"#C9A060" }}>
                     Your seat is being finalised.
@@ -580,12 +580,12 @@ export default function FindYourSeat() {
 
             <div className="px-8 pb-7">
               <button onClick={reset}
-                className="w-full py-3 rounded-xl text-sm font-bold transition-colors"
+                className="w-full py-3 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
                 style={{ border:"1px solid rgba(201,160,96,0.2)", color:"#9A8A6A" }}
                 onMouseEnter={e => (e.currentTarget.style.background = "rgba(201,160,96,0.05)")}
                 onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
               >
-                🔍 Search again
+                <Search size={14} /> Search again
               </button>
             </div>
           </div>

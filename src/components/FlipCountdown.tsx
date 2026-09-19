@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Heart } from "lucide-react";
 
 interface FlipDigitProps {
   value: number;
@@ -161,9 +162,11 @@ export default function FlipCountdown({ eventDate, onPastChange }: FlipCountdown
   if (cd.isPast) {
     return (
       <div className="flex flex-col items-center py-6 gap-3">
-        <div className="text-5xl animate-heartbeat">💒</div>
+        <div className="w-12 h-12 rounded-full flex items-center justify-center bg-amber-100 text-amber-600 animate-soft-pulse">
+          <Heart size={24} className="fill-amber-500" />
+        </div>
         <p className="text-xl font-bold" style={{ color: "var(--theme-primary)" }}>
-          They&apos;re married! 🎉
+          They&apos;re married!
         </p>
       </div>
     );
